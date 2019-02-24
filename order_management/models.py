@@ -8,8 +8,14 @@ class Item(models.Model):
 	item_id = models.AutoField(primary_key=True)
 	item_name = models.CharField(max_length=30)
 	item_type = models.CharField(max_length=30)
-	 price = models.DecimalField(max_digits=38, decimal_places=2)
+	price = models.DecimalField(max_digits=38, decimal_places=2)
 	size = models.CharField(max_length=10, blank=True)
+	
+	def __unicode__(self):
+		return self.item_type + " - " + self.item_name
+
+	def __str__(self):
+		return self.__unicode__()
 
 
 class Menu(models.Model):
@@ -18,12 +24,24 @@ class Menu(models.Model):
 	menu_date = models.DateField
 	items = models.ManyToManyField(Item)
 
+	def __unicode__(self):
+		return self.menu_name
+	
+	def __str__(self):
+		return self.__unicode__()		
+
 
 class Ingredient(models.Model):
 	ingredient_id = models.AutoField(primary_key=True)
 	ingredient_name = models.CharField(max_length=100)
 	ingredient_type = models.CharField(max_length=30)
 	in_stock = models.IntegerField()
+
+	def __unicode__(self):
+		return '{} ({})'.format(self.ingredient_name, self.ingredient_type)
+
+	def __str__(self):
+		return self.__unicode__()
 
 
 class Packaging(models.Model):
@@ -32,6 +50,13 @@ class Packaging(models.Model):
 	size = models.CharField(max_length=10)
 	in_stock = models.IntegerField()
 
+	def __unicode__(self):
+		return self.packaging_type
+
+	def __str__(self):
+		return self.__unicode__()		
+
+
 class Recipe(models.Model):
 	recipe_id = models.AutoField(primary_key=True)
 	recipe_name = models.CharField(max_length=30)
@@ -39,27 +64,31 @@ class Recipe(models.Model):
 	portions = models.IntegerField()
 	time_to_cook = models.DurationField(blank=True, null=True)
 	directions = models.TextField(blank=True)
-	ingredients = models.ManyToManyField(Ingredient,
-		through='RecipeIngredient', 
-		through_fields=('recipe', 'ingredient'))
+	ingredients = models.ManyToManyField(Ingredient)
 	created_date = models.DateField(auto_now_add=True)
 
+	def __unicode__(self):
+		return self.recipe_name + ' Recipe'
 
-class RecipeIngredient(models.Model):
-    recipe = models.ForeignKey(Recipe, on_delete=models.SET_NULL, null=True)
-    ingredient = models.ForeignKey(Ingredient, on_delete=models.SET_NULL, null=True)
-    amount_needed = models.CharField(max_length=30)
+	def __str__(self):
+		return self.__unicode__()			
 
 
 class Customer(models.Model):
-    customer_id = models.AutoField(primary_key=True)
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
-    phone_number = models.CharField(max_length=18)
-    address = models.CharField(max_length=60, blank=True)
-    city = models.CharField(max_length=30, blank=True)
-    notes = models.TextField(blank=True)
-    created_date = models.DateField(auto_now_add=True)
+	customer_id = models.AutoField(primary_key=True)
+	name = models.CharField(max_length=60)
+	# first_name = models.CharField(max_length=30)
+	# last_name = models.CharField(max_length=30)
+	phone_number = models.CharField(max_length=18)
+	address = models.CharField(max_length=60, blank=True)
+	city = models.CharField(max_length=30, blank=True)
+	notes = models.TextField(blank=True)
+	created_date = models.DateField(auto_now_add=True)
+	def __unicode__(self):
+		return self.name
+
+	def __str__(self):
+		return self.__unicode__()	    
 
 
 class Order(models.Model):
