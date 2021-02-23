@@ -5,3 +5,8 @@ venv/*
 # IDE
 .idea*
 .vscode*
+
+# Static Assets
+stash/*
+order_management/static/*
+staticfiles/*
